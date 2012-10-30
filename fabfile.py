@@ -14,10 +14,24 @@ from fabric.api import local, run, put, sudo
 def set_hostname(host):
     sudo('echo -e '+host+' > /etc/hostname')
     sudo('echo -e "127.0.0.1\t'+host+'" >> /etc/hosts')
-    
+
 def add_puppet_repo():
     sudo('echo -e "deb http://apt.puppetlabs.com/ precise main\ndeb-src http://apt.puppetlabs.com/ precise main" >> /etc/apt/sources.list.d/puppet.list')
 
     sudo('apt-key adv --keyserver keyserver.ubuntu.com --recv 4BD6EC30')
 
     sudo('apt-get update')
+
+def install_puppet(host):
+
+    set_hostname(host)
+    add_puppet_repo()
+
+    sudo('apt-get install puppet')
+
+def install_puppet_master(host):
+
+    install_puppet(host)
+    add_puppet_repo()
+    
+    sudo('apt-get install puppetmaster') 
