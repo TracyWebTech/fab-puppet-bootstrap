@@ -1,28 +1,45 @@
 from fabric.api import local, sudo, settings
 
 def set_hostname(host):
+    """
+    Change server hostname
+    """
     sudo('echo -e "127.0.0.1\t'+host+'" >> /etc/hosts')
     sudo('hostname '+host)
 
 def add_puppet_repository():
+    """
+    Add puppetlabs repository to apt
+    """
     sudo('echo -e "deb http://apt.puppetlabs.com/ precise main\ndeb-src http://apt.puppetlabs.com/ precise main" >> /etc/apt/sources.list.d/puppet.list')
     sudo('apt-key adv --keyserver keyserver.ubuntu.com --recv 4BD6EC30')
     sudo('apt-get update')
 
 def agent_add_master_in_hosts(master):
+    """
+    Puppet agent set master in your hosts
+    """
     sudo('echo -e "' + master + '\tpuppet" >> /etc/hosts')
 
 def agent_connect_to_master(agent_host, master):
+    """
+    Puppet agent connect on master to send your keys
+    """
     with settings(warn_only=True):
         sudo('puppet agent --test')
     local('fab -H ' + master + ' master_accept_agent:' + agent_host) 
 
 def agent_enable_autostart():
+    """
+    Enable Puppet agent autostart on boot
+    """
     sudo('sed -i -re "s/START=no/START=yes/" /etc/default/puppet')
     sudo('service puppet start')
 
 def puppet_agent_install(host, master):
-
+    """
+    Install Puppet agent and connect to Master to send your key
+    """
     set_hostname(host)
     add_puppet_repository()
     agent_add_master_in_hosts(master)
@@ -32,10 +49,15 @@ def puppet_agent_install(host, master):
 
 
 def master_accept_agent(agent_host):
+    """
+    Puppet master accept key from agent
+    """
     sudo('puppet cert sign ' + agent_host)
 
 def puppet_master_install(host):
-
+    """
+    Install puppet master
+    """
     set_hostname(host)
     add_puppet_repository()
     
