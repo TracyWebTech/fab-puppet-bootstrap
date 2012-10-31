@@ -1,37 +1,33 @@
 from fabric.api import local, run, put, sudo
 
-# set(
-#     project = 'project_name',
- 
-#     package     = '$(project).zip',
- 
-#     # Remote servers
-#     fab_user    = 'usuario_ssh',
-#     fab_hosts   = ['servidor1.com', 'servidor2.com'],
-# )
- 
-
 def set_hostname(host):
-    sudo('echo -e '+host+' > /etc/hostname')
     sudo('echo -e "127.0.0.1\t'+host+'" >> /etc/hosts')
+    sudo('hostname '+host)
+
+def set_puppet_master_host(master):
+    sudo('echo -e "' + master + '\tpuppet" >> /etc/hosts')
 
 def add_puppet_repo():
     sudo('echo -e "deb http://apt.puppetlabs.com/ precise main\ndeb-src http://apt.puppetlabs.com/ precise main" >> /etc/apt/sources.list.d/puppet.list')
-
     sudo('apt-key adv --keyserver keyserver.ubuntu.com --recv 4BD6EC30')
-
     sudo('apt-get update')
 
-def install_puppet(host):
+def connect_to_master():
+    sudo('puppet agent --test')
+
+def install_puppet(host, master):
 
     set_hostname(host)
     add_puppet_repo()
+    set_puppet_master_host(master)
 
     sudo('apt-get install puppet')
 
+    connect_to_master()
+
 def install_puppet_master(host):
 
-    install_puppet(host)
+    set_hostname(host)
     add_puppet_repo()
     
     sudo('apt-get install puppetmaster') 
