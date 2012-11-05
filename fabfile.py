@@ -54,6 +54,13 @@ def master_accept_agent(agent_host):
     """
     sudo('puppet cert sign ' + agent_host)
 
+
+def master_accept_all():
+    """
+    Puppet master accept all requested keys
+    """
+    sudo('sudo puppet certo sign --all')
+
 def puppet_master_install(host=None):
     """
     Install puppet master
