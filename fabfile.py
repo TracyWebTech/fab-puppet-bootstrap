@@ -1,4 +1,8 @@
-from fabric.api import local, sudo, settings
+from fabric.api import local, sudo, settings, env
+
+
+env.use_ssh_config = True
+
 
 def set_hostname(host):
     """
