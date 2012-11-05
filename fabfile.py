@@ -63,7 +63,7 @@ def master_accept_all():
     """
     Puppet master accept all requested keys
     """
-    sudo('sudo puppet certo sign --all')
+    sudo('sudo puppet cert sign --all')
 
 def puppet_master_install(host=None):
     """
