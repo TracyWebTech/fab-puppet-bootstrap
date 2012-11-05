@@ -31,7 +31,7 @@ def agent_connect_to_master(agent_host, master):
     """
     with settings(warn_only=True):
         sudo('puppet agent --test')
-    local('fab -H ' + master + ' master_accept_agent:' + agent_host) 
+    #local('fab -H ' + master + ' master_accept_agent:' + agent_host) 
 
 def agent_enable_autostart():
     """
