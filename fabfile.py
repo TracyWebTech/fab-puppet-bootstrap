@@ -19,7 +19,7 @@ def agent_add_master_in_hosts(master):
     """
     Puppet agent set master in your hosts
     """
-    sudo('echo -e "' + master + '\tpuppet" >> /etc/hosts')
+    sudo('echo -e "' + master + '\tpuppet puppetmaster" >> /etc/hosts')
 
 def agent_connect_to_master(agent_host, master):
     """
@@ -40,7 +40,7 @@ def puppet_agent_install(host, master):
     """
     Install Puppet agent and connect to Master to send your key
     """
-    set_hostname(host)
+    # set_hostname(host)
     add_puppet_repository()
     agent_add_master_in_hosts(master)
     sudo('apt-get install puppet')
@@ -54,11 +54,11 @@ def master_accept_agent(agent_host):
     """
     sudo('puppet cert sign ' + agent_host)
 
-def puppet_master_install(host):
+def puppet_master_install(host=None):
     """
     Install puppet master
     """
-    set_hostname(host)
+    # set_hostname(host)
     add_puppet_repository()
     
     sudo('apt-get install puppetmaster') 
