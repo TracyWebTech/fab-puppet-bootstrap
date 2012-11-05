@@ -15,7 +15,7 @@ def add_puppet_repository():
     """
     Add puppetlabs repository to apt
     """
-    sudo('echo -e "deb http://apt.puppetlabs.com/ precise main\ndeb-src http://apt.puppetlabs.com/ precise main" >> /etc/apt/sources.list.d/puppet.list')
+    sudo('echo -e "deb http://apt.puppetlabs.com/ precise main\ndeb-src http://apt.puppetlabs.com/ precise main" > /etc/apt/sources.list.d/puppet.list')
     sudo('apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 4BD6EC30')
     sudo('apt-get update')
 
