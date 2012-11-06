@@ -46,7 +46,7 @@ def puppet_agent_install(master_ip):
     """
     # set_hostname(host)
     add_puppet_repository()
-    agent_add_master_in_hosts(master)
+    agent_add_master_in_hosts(master_ip)
     sudo('apt-get install puppet')
     agent_connect_to_master()
     agent_enable_autostart()
