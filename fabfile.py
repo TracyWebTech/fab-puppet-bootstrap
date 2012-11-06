@@ -1,4 +1,8 @@
-from fabric.api import local, sudo, settings
+from fabric.api import local, sudo, settings, env
+
+
+env.use_ssh_config = True
+
 
 def set_hostname(host):
     """
@@ -11,8 +15,8 @@ def add_puppet_repository():
     """
     Add puppetlabs repository to apt
     """
-    sudo('echo -e "deb http://apt.puppetlabs.com/ precise main\ndeb-src http://apt.puppetlabs.com/ precise main" >> /etc/apt/sources.list.d/puppet.list')
-    sudo('apt-key adv --keyserver keyserver.ubuntu.com --recv 4BD6EC30')
+    sudo('echo -e "deb http://apt.puppetlabs.com/ precise main\ndeb-src http://apt.puppetlabs.com/ precise main" > /etc/apt/sources.list.d/puppet.list')
+    sudo('apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 4BD6EC30')
     sudo('apt-get update')
 
 def agent_add_master_in_hosts(master_ip):
@@ -59,7 +63,7 @@ def master_accept_all():
     """
     Puppet master accept all requested keys
     """
-    sudo('sudo puppet certo sign --all')
+    sudo('sudo puppet cert sign --all')
 
 def puppet_master_install(host=None):
     """
