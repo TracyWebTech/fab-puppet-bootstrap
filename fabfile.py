@@ -15,13 +15,13 @@ def add_puppet_repository():
     sudo('apt-key adv --keyserver keyserver.ubuntu.com --recv 4BD6EC30')
     sudo('apt-get update')
 
-def agent_add_master_in_hosts(master):
+def agent_add_master_in_hosts(master_ip):
     """
     Puppet agent set master in your hosts
     """
-    sudo('echo -e "' + master + '\tpuppet puppetmaster" >> /etc/hosts')
+    sudo('echo -e "' + master_ip + '\tpuppet puppetmaster" >> /etc/hosts')
 
-def agent_connect_to_master(agent_host, master):
+def agent_connect_to_master():
     """
     Puppet agent connect on master to send your keys
     """
@@ -36,7 +36,7 @@ def agent_enable_autostart():
     sudo('sed -i -re "s/START=no/START=yes/" /etc/default/puppet')
     sudo('service puppet start')
 
-def puppet_agent_install(host, master):
+def puppet_agent_install(master_ip):
     """
     Install Puppet agent and connect to Master to send your key
     """
@@ -44,7 +44,7 @@ def puppet_agent_install(host, master):
     add_puppet_repository()
     agent_add_master_in_hosts(master)
     sudo('apt-get install puppet')
-    agent_connect_to_master(host, master)
+    agent_connect_to_master()
     agent_enable_autostart()
 
 
