@@ -1,4 +1,4 @@
-from fabric.api import local, sudo, settings, env
+from fabric.api import local, sudo, settings, env, task
 
 
 env.use_ssh_config = True
@@ -31,7 +31,7 @@ def agent_connect_to_master():
     """
     with settings(warn_only=True):
         sudo('puppet agent --test')
-    #local('fab -H ' + master + ' master_accept_agent:' + agent_host) 
+    #local('fab -H ' + master + ' puppetmaster_sign:' + agent_host)
 
 def agent_enable_autostart():
     """
@@ -40,7 +40,8 @@ def agent_enable_autostart():
     sudo('sed -i -re "s/START=no/START=yes/" /etc/default/puppet')
     sudo('service puppet start')
 
-def puppet_agent_install(master_ip):
+@task
+def puppet_install(master_ip):
     """
     Install Puppet agent and connect to Master to send your key
     """
@@ -51,25 +52,26 @@ def puppet_agent_install(master_ip):
     agent_connect_to_master()
     agent_enable_autostart()
 
-
-def master_accept_agent(agent_host):
+@task
+def puppetmaster_sign(agent_host):
     """
     Puppet master accept key from agent
     """
     sudo('puppet cert sign ' + agent_host)
 
-
-def master_accept_all():
+@task
+def puppetmaster_sign_all():
     """
     Puppet master accept all requested keys
     """
     sudo('sudo puppet cert sign --all')
 
-def puppet_master_install(host=None):
+@task
+def puppetmaster_install(host=None):
     """
     Install puppet master
     """
     # set_hostname(host)
     add_puppet_repository()
-    
-    sudo('apt-get install puppetmaster') 
+
+    sudo('apt-get install puppetmaster')
