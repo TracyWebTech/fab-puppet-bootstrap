@@ -1,8 +1,9 @@
-from fabric.api import local, sudo, settings, env, task
+from fabric.api import local, sudo, settings, task, parallel, roles
 
-
-env.use_ssh_config = True
-
+try:
+    from config import env
+except ImportError:
+    pass
 
 def set_hostname(host):
     """
@@ -41,6 +42,8 @@ def agent_enable_autostart():
     sudo('service puppet start')
 
 @task
+@roles('puppet')
+@parallel
 def puppet_install(master_ip):
     """
     Install Puppet agent and connect to Master to send your key
@@ -53,6 +56,7 @@ def puppet_install(master_ip):
     agent_enable_autostart()
 
 @task
+@roles('puppetmaster')
 def puppetmaster_sign(agent_host):
     """
     Puppet master accept key from agent
@@ -60,6 +64,7 @@ def puppetmaster_sign(agent_host):
     sudo('puppet cert sign ' + agent_host)
 
 @task
+@roles('puppetmaster')
 def puppetmaster_sign_all():
     """
     Puppet master accept all requested keys
@@ -67,6 +72,7 @@ def puppetmaster_sign_all():
     sudo('sudo puppet cert sign --all')
 
 @task
+@roles('puppetmaster')
 def puppetmaster_install(host=None):
     """
     Install puppet master
