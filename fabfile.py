@@ -1,4 +1,8 @@
-from fabric.api import local, sudo, settings, task, parallel, roles
+
+from fabric.api import sudo
+from fabric.context_manages import settings
+from fabric.contrib.files import append, comment
+from fabric.decorators import task, parallel, roles
 
 try:
     from config import env
