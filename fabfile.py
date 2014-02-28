@@ -66,16 +66,6 @@ def agent_add_master_in_hosts():
     append('/etc/hosts', hosts_line, use_sudo=True)
 
 
-@task
-@roles('puppet')
-def puppet_run():
-    """
-    Force Puppet agent execution on node
-    """
-    with settings(warn_only=True):
-        sudo('puppet agent --test --waitforcert=5')
-
-
 def agent_enable_autostart():
     """
     Enable Puppet agent autostart on boot
@@ -86,6 +76,16 @@ def agent_enable_autostart():
 
     if sudo('service puppet status', quiet=True).failed:
         sudo('service puppet restart')
+
+
+@task
+@roles('puppet')
+def puppet_run():
+    """
+    Force Puppet agent execution on node
+    """
+    with settings(warn_only=True):
+        sudo('puppet agent --test --waitforcert=5')
 
 
 @task
